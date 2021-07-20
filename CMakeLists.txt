@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.6)
-set(CMAKE_C_COMPILER C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe)
-set(CMAKE_CXX_COMPILER C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/g++.exe)
+
 project(TinyHttp)
 
+if (MINGW)
+    set(CMAKE_C_COMPILER C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe)
+    set(CMAKE_CXX_COMPILER C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/g++.exe)
+endif ()
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -17,7 +20,6 @@ add_custom_target(
 )
 
 INCLUDE(CMakeLists_Headers.txt)
-message(${COMMON_KERNEL_HEADERS})
 macro(makeLink src dest target)
     add_custom_command(
             TARGET ${target} PRE_BUILD
@@ -31,10 +33,12 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E make_directory ${INC_DIR}/${PROJECT_NAME}
 )
 
-foreach(header_file ${INCLUDE_HEADERS} ${INCLUDE_KERNEL_HEADERS})
+foreach (header_file ${INCLUDE_HEADERS} ${INCLUDE_KERNEL_HEADERS})
     string(REPLACE "/" ";" arr ${header_file})
     list(GET arr -1 file_name)
     makeLink(${PROJECT_SOURCE_DIR}/${header_file} ${INC_DIR}/${PROJECT_NAME}/${file_name} LINK_HEADERS)
-endforeach()
+    message(${PROJECT_SOURCE_DIR}/${header_file})
+    message(${INC_DIR}/${PROJECT_NAME}/${file_name})
+endforeach ()
 
 add_subdirectory(TinyHttp)
