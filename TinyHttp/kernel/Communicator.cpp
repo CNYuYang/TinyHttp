@@ -2,6 +2,7 @@
 // Created by y00612228 on 2021/7/20.
 //
 #include <pthread.h>
+#include <errno.h>
 #include "Communicator.h"
 
 
@@ -25,16 +26,16 @@ int CommService::init(const struct sockaddr *bind_addr, socklen_t addrlen,
             //this->ssl_accept_timeout = 0;
             return 0;
         }
+        errno = ret;
         free(this->bind_addr);
     }
 
     return -1;
-
 }
 
 void CommService::deinit() {
-
-
+    pthread_mutex_destroy(&this->mutex);
+    free(this->bind_addr);
 }
 
 int CommService::drain(int max) {
