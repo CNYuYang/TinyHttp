@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 # 跨平台通用Kernel头文件
 set(COMMON_KERNEL_HEADERS
         TinyHttp/kernel/Communicator.h
+        TinyHttp/kernel/CommScheduler.h
         )
 
 # 针对不同平台的Kernel头文件

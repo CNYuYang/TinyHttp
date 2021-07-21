@@ -1,7 +1,7 @@
 #include "THServer.h"
 
 int
-THServerBase::start(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file, const char *key_file) {
+THServerBase::init(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file, const char *key_file) {
 
     /*超时时间选择，如果同时配置了peer_response_timeout/receive_timeout 选择其中较小的那个 */
 
@@ -13,8 +13,8 @@ THServerBase::start(const struct sockaddr *bind_addr, socklen_t addrlen, const c
         }
     }
 
-    //调用父类 @Link{Communicator} 的init()方法
-    if (this->init(bind_addr, addrlen, -1, timeout) < 0)
+    //调用父类 @Link{Communicator.cpp} 的init()方法
+    if (this->CommService::init(bind_addr, addrlen, -1, timeout) < 0)
         return -1;
 
     //设置ssl证书
@@ -33,3 +33,15 @@ THServerBase::start(const struct sockaddr *bind_addr, socklen_t addrlen, const c
 int THServerBase::init_ssl_ctx(const char *cert_file, const char *key_file) {
     return 0;
 };
+
+int THServerBase::start(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file,
+                        const char *key_file) {
+    //SSL_CTX *ssl_ctx;
+    // @TODO ssl相关
+    if (this->init(bind_addr, addrlen, cert_file, key_file) >= 0) {
+        if (this->scheduler->bind(this) >= 0)
+            return 0;
+    }
+
+    return -1;
+}

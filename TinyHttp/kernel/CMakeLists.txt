@@ -3,6 +3,7 @@ project(kernel)
 
 set(SRC
         Communicator.cpp
+        CommScheduler.cpp
         )
 
 add_library(${PROJECT_NAME} OBJECT ${SRC})

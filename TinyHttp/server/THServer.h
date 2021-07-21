@@ -6,6 +6,7 @@
 #include <atomic>
 #include <functional>
 #include "Communicator.h"
+#include "CommScheduler.h"
 #include "THTask.h"
 
 struct THServerParams {
@@ -26,7 +27,7 @@ public:
             conn_count(0) {
         this->params = *params;
         //this->listen_fd = -1;
-        // this->unbind_finish = false;
+        //this->unbind_finish = false;
     }
 
 public:
@@ -42,10 +43,11 @@ protected:
 
 private:
     int init_ssl_ctx(const char *cert_file, const char *key_file);
-
+    int init(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file, const char *key_file);
 protected:
     std::atomic<size_t> conn_count;
-
+private:
+    CommScheduler *scheduler;
 };
 
 //@TODO 未开始

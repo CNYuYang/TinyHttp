@@ -17,6 +17,12 @@ static constexpr struct THServerParams HTTP_SERVER_PARAMS_DEFAULT =
                 .receive_timeout        =    -1,
         };
 
+
+/**
+ * https://www.orcode.com/question/862476_kf0640.html
+ * 特化类的构造函数实现
+ */
+
 template<>
 inline THHttpServer::THServer(http_process_t
 proc) :
