@@ -1,3 +1,3 @@
 # TinyHttp
 
-上班摸🐟，仿照sogou/workflow实现Http服务器。
+仿照 [sogou/workflow](https://github.com/sogou/workflow) 实现Http服务器。

@@ -1,8 +1,3 @@
-//
-// Created by y00612228 on 2021/7/20.
-//
-#include <sys/socket.h>
-#include <pthread.h>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>

@@ -1,12 +1,8 @@
-//
-// Created by y00612228 on 2021/7/20.
-//
-
 #ifndef TINYHTTP_COMMUNICATOR_H
 #define TINYHTTP_COMMUNICATOR_H
 
 #include <pthread.h>
-
+#include <sys/socket.h>
 
 class CommService{
 

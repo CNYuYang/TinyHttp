@@ -23,4 +23,7 @@ endif ()
 
 set(INCLUDE_HEADERS
         TinyHttp/server/THServer.h
+        TinyHttp/server/THHttpServer.h
+        TinyHttp/factory/THTaskFactory.h
+        TinyHttp/protocol/HttpMessage.h
         )
