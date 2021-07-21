@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.6)
 set(COMMON_KERNEL_HEADERS
         TinyHttp/kernel/Communicator.h
         TinyHttp/kernel/CommScheduler.h
+        TinyHttp/kernel/msgqueue.h
         )
 
 # 针对不同平台的Kernel头文件
@@ -29,4 +30,5 @@ set(INCLUDE_HEADERS
         TinyHttp/factory/THTaskFactory.h
         TinyHttp/factory/THTask.h
         TinyHttp/protocol/HttpMessage.h
+        TinyHttp/manager/THGlobal.h
         )

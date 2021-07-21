@@ -3,6 +3,12 @@
 
 #include <pthread.h>
 #include <sys/socket.h>
+#include "msgqueue.h"
+
+struct poller_params
+{
+    size_t max_open_files;
+};
 
 class CommService{
 
@@ -25,5 +31,15 @@ private:
 
 };
 
+class Communicator{
+public:
+    int init(size_t poller_threads, size_t handler_threads);
+
+private:
+    struct __msgqueue *queue;
+private:
+    int create_poller(size_t poller_threads);
+
+};
 
 #endif //TINYHTTP_COMMUNICATOR_H

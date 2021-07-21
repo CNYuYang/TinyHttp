@@ -11,6 +11,7 @@ add_subdirectory(kernel)
 add_subdirectory(protocol)
 add_subdirectory(factory)
 add_subdirectory(server)
+add_subdirectory(manager)
 
 # 编译生成静态链接库
 
@@ -20,4 +21,5 @@ add_library(
         $<TARGET_OBJECTS:protocol>
         $<TARGET_OBJECTS:factory>
         $<TARGET_OBJECTS:server>
+        $<TARGET_OBJECTS:manager>
 )

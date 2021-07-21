@@ -1,4 +1,5 @@
 #include "THServer.h"
+#include "THGlobal.h"
 
 int
 THServerBase::init(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file, const char *key_file) {
@@ -25,6 +26,7 @@ THServerBase::init(const struct sockaddr *bind_addr, socklen_t addrlen, const ch
         }
     }
 
+    this->scheduler = THGlobal::get_scheduler();
     return 0;
 }
 

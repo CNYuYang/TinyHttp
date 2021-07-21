@@ -1,6 +1,6 @@
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
+#include <cstring>
+#include <cstdlib>
+#include <cerrno>
 #include "Communicator.h"
 
 
@@ -38,4 +38,30 @@ void CommService::deinit() {
 
 int CommService::drain(int max) {
     return 1;
+}
+
+int Communicator::init(size_t poller_threads, size_t handler_threads) {
+
+    //用于轮询的线程
+    if (poller_threads == 0) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    //创建用于轮询的线程
+    if (this->create_poller(poller_threads) >= 0) {
+
+    }
+
+    return -1;
+}
+
+//创建用于轮询的线程
+int Communicator::create_poller(size_t poller_threads) {
+
+    struct poller_params params = {
+            .max_open_files = 65536,
+    };
+    
+    return 0;
 }

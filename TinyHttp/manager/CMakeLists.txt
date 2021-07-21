@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
-project(kernel)
+project(manager)
 
 set(SRC
-        Communicator.cpp
-        CommScheduler.cpp
-        msgqueue.cpp
+        THGlobal.cpp
         )
 
 add_library(${PROJECT_NAME} OBJECT ${SRC})
