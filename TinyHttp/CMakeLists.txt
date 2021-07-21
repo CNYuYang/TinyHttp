@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.6)
 project(TinyHttp)
 
 include_directories(${INC_DIR}/workflow)

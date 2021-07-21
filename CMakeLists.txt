@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-
 project(TinyHttp)
-
-if (MINGW)
-    set(CMAKE_C_COMPILER C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe)
-    set(CMAKE_CXX_COMPILER C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/g++.exe)
-endif ()
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -37,8 +31,6 @@ foreach (header_file ${INCLUDE_HEADERS} ${INCLUDE_KERNEL_HEADERS})
     string(REPLACE "/" ";" arr ${header_file})
     list(GET arr -1 file_name)
     makeLink(${PROJECT_SOURCE_DIR}/${header_file} ${INC_DIR}/${PROJECT_NAME}/${file_name} LINK_HEADERS)
-    message(${PROJECT_SOURCE_DIR}/${header_file})
-    message(${INC_DIR}/${PROJECT_NAME}/${file_name})
 endforeach ()
 
 add_subdirectory(TinyHttp)

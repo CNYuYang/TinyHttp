@@ -6,7 +6,8 @@
 #define TINYHTTP_THSERVER_H
 
 #include <sys/types.h>
-#include "kernel/Communicator.h"
+#include <atomic>
+#include "../kernel/Communicator.h"
 
 struct THServerParams {
 };
