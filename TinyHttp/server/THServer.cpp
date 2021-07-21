@@ -29,6 +29,7 @@ THServerBase::start(const struct sockaddr *bind_addr, socklen_t addrlen, const c
 }
 
 /*暂时不配置ssl信息*/
+// @TODO ssl相关
 int THServerBase::init_ssl_ctx(const char *cert_file, const char *key_file) {
     return 0;
 };

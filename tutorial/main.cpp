@@ -1,9 +1,12 @@
 #include <iostream>
-#include "THServer.h"
+#include "THHttpServer.h"
 
 using namespace std;
 
 int main(){
 
+    THHttpServer httpServer([](THHttpTask *task){
+
+    });
     cout << "Hello World" << endl;
 }

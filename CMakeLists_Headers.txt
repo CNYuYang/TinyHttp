@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.6)
 
-# 跨平台Kernel头文件
+# 跨平台通用Kernel头文件
 set(COMMON_KERNEL_HEADERS
         TinyHttp/kernel/Communicator.h
         )
 
-# 针对不同平台的头文件
+# 针对不同平台的Kernel头文件
 if (WIN32)
     set(INCLUDE_KERNEL_HEADERS
             )
@@ -21,9 +21,11 @@ else ()
     message(FATAL_ERROR "IOService unsupported.")
 endif ()
 
+# 其他头文件
 set(INCLUDE_HEADERS
         TinyHttp/server/THServer.h
         TinyHttp/server/THHttpServer.h
         TinyHttp/factory/THTaskFactory.h
+        TinyHttp/factory/THTask.h
         TinyHttp/protocol/HttpMessage.h
         )

@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.6)
 project(TinyHttp)
 
+# 引入头文件
+
 include_directories(${INC_DIR}/TinyHttp)
+
+# 添加文件夹
 
 add_subdirectory(kernel)
 add_subdirectory(protocol)
 add_subdirectory(factory)
 add_subdirectory(server)
+
+# 编译生成静态链接库
 
 add_library(
         ${PROJECT_NAME} STATIC

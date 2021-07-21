@@ -4,7 +4,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <atomic>
+#include <functional>
 #include "Communicator.h"
+#include "THTask.h"
 
 struct THServerParams {
     int peer_response_timeout; /*每次读写操作的超时时间*/
@@ -46,9 +48,17 @@ protected:
 
 };
 
+//@TODO 未开始
 template<class REQ, class RESP>
-class WFServer : public THServerBase {
+class THServer : public THServerBase {
+public:
+    THServer(std::function<void(THNetworkTask<REQ, RESP> *)> proc) :
+            THServerBase(&SERVER_PARAMS_DEFAULT),
+            process(std::move(proc)) {
+    }
 
+protected:
+    std::function<void(THNetworkTask<REQ, RESP> *)> process;
 };
 
 
