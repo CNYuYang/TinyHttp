@@ -5,11 +5,6 @@
 #include <sys/socket.h>
 #include "msgqueue.h"
 
-struct poller_params
-{
-    size_t max_open_files;
-};
-
 class CommService{
 
 public:

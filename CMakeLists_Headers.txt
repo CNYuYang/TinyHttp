@@ -4,7 +4,12 @@ cmake_minimum_required(VERSION 3.6)
 set(COMMON_KERNEL_HEADERS
         TinyHttp/kernel/Communicator.h
         TinyHttp/kernel/CommScheduler.h
+        TinyHttp/kernel/list.h
+        TinyHttp/kernel/mpoller.h
         TinyHttp/kernel/msgqueue.h
+        TinyHttp/kernel/poller.h
+        TinyHttp/kernel/rbtree.h
+        TinyHttp/kernel/thrdpool.h
         )
 
 # 针对不同平台的Kernel头文件

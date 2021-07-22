@@ -4,7 +4,11 @@ project(kernel)
 set(SRC
         Communicator.cpp
         CommScheduler.cpp
-        msgqueue.cpp
+        mpoller.c
+        msgqueue.c
+        poller.c
+        rbtree.c
+        thrdpool.c
         )
 
 add_library(${PROJECT_NAME} OBJECT ${SRC})

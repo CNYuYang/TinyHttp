@@ -1,8 +1,9 @@
 #include <cstring>
 #include <cstdlib>
 #include <cerrno>
+#include <stdlib.h>
 #include "Communicator.h"
-
+#include "poller.h"
 
 int CommService::init(const struct sockaddr *bind_addr, socklen_t addrlen,
                       int listen_timeout, int response_timeout) {
@@ -62,6 +63,15 @@ int Communicator::create_poller(size_t poller_threads) {
     struct poller_params params = {
             .max_open_files = 65536,
     };
-    
+
+    // 创建消息队列
+    this->queue = msgqueue_create(4096, sizeof(struct poller_result));
+
+    if(this->queue){
+
+
+    }
+
+
     return 0;
 }
