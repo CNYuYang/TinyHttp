@@ -31,6 +31,15 @@ public:
     }
 
 public:
+    /* Start on port with IPv4. */
+    int start(unsigned short port)
+    {
+        return start(AF_INET, NULL, port, NULL, NULL);
+    }
+
+    int start(int family, const char *host, unsigned short port,
+              const char *cert_file, const char *key_file);
+
     /* 真正的启动函数 */
     int start(const struct sockaddr *bind_addr, socklen_t addrlen,
               const char *cert_file, const char *key_file);

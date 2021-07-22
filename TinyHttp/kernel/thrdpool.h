@@ -25,8 +25,8 @@ typedef struct __thrdpool thrdpool_t;
 
 struct thrdpool_task
 {
-	void (*routine)(void *);
-	void *context;
+	void (*routine)(void *); //任务函数
+	void *context; // 运行上下文
 };
 
 #ifdef __cplusplus

@@ -23,16 +23,17 @@
 #include "list.h"
 #include "thrdpool.h"
 
+// 线程池
 struct __thrdpool
 {
-	struct list_head task_queue;
-	size_t nthreads;
-	size_t stacksize;
-	pthread_t tid;
-	pthread_mutex_t mutex;
-	pthread_cond_t cond;
-	pthread_key_t key;
-	pthread_cond_t *terminate;
+	struct list_head task_queue; // 任务队列
+	size_t nthreads; // 线程数
+	size_t stacksize; // 栈大小
+	pthread_t tid; // 线程id
+	pthread_mutex_t mutex; // 线程锁
+	pthread_cond_t cond; // 线程间通信的信号量
+	pthread_key_t key; // @TODO 了解作用
+	pthread_cond_t *terminate; // @TODO 了解作用
 };
 
 struct __thrdpool_task_entry
@@ -43,6 +44,10 @@ struct __thrdpool_task_entry
 
 static pthread_t __zero_tid;
 
+/*
+ * 线程运行的函数
+ *
+ * */
 static void *__thrdpool_routine(void *arg)
 {
 	thrdpool_t *pool = (thrdpool_t *)arg;
@@ -92,6 +97,11 @@ static void *__thrdpool_routine(void *arg)
 	return NULL;
 }
 
+/**
+ * 初始化线程池的锁
+ * @param pool
+ * @return
+ */
 static int __thrdpool_init_locks(thrdpool_t *pool)
 {
 	int ret;
@@ -110,6 +120,11 @@ static int __thrdpool_init_locks(thrdpool_t *pool)
 	return -1;
 }
 
+/**
+ * 销毁线程池的锁
+ * @param pool
+ * @return
+ */
 static void __thrdpool_destroy_locks(thrdpool_t *pool)
 {
 	pthread_mutex_destroy(&pool->mutex);
@@ -139,6 +154,9 @@ static void __thrdpool_terminate(int in_pool, thrdpool_t *pool)
 		pthread_join(pool->tid, NULL);
 }
 
+/*
+ * 线程池初始化创建线程
+ * */
 static int __thrdpool_create_threads(size_t nthreads, thrdpool_t *pool)
 {
 	pthread_attr_t attr;
@@ -148,6 +166,7 @@ static int __thrdpool_create_threads(size_t nthreads, thrdpool_t *pool)
 	ret = pthread_attr_init(&attr);
 	if (ret == 0)
 	{
+	    // 配置线程运行参数：栈大小
 		if (pool->stacksize)
 			pthread_attr_setstacksize(&attr, pool->stacksize);
 
@@ -163,7 +182,7 @@ static int __thrdpool_create_threads(size_t nthreads, thrdpool_t *pool)
 		pthread_attr_destroy(&attr);
 		if (pool->nthreads == nthreads)
 			return 0;
-
+        // 销毁线程池
 		__thrdpool_terminate(0, pool);
 	}
 
@@ -206,6 +225,9 @@ thrdpool_t *thrdpool_create(size_t nthreads, size_t stacksize)
 	return NULL;
 }
 
+/*
+ * 添加可执行的任务
+ * */
 inline void __thrdpool_schedule(const struct thrdpool_task *task, void *buf,
 								thrdpool_t *pool)
 {
@@ -213,11 +235,13 @@ inline void __thrdpool_schedule(const struct thrdpool_task *task, void *buf,
 
 	entry->task = *task;
 	pthread_mutex_lock(&pool->mutex);
+	//在线程安全的情况下，添加任务
 	list_add_tail(&entry->list, &pool->task_queue);
 	pthread_cond_signal(&pool->cond);
 	pthread_mutex_unlock(&pool->mutex);
 }
 
+/*添加任务*/
 int thrdpool_schedule(const struct thrdpool_task *task, thrdpool_t *pool)
 {
 	void *buf = malloc(sizeof (struct __thrdpool_task_entry));

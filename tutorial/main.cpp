@@ -5,11 +5,11 @@ using namespace std;
 
 int main(){
 
-    THHttpServer httpServer([](THHttpTask *task){
+    THHttpServer server([](THHttpTask *task){
 
     });
 
-    httpServer.start();
+    server.start(80);
 
     cout << "Hello World" << endl;
 }
