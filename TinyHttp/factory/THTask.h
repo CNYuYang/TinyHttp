@@ -8,6 +8,15 @@
 //@TODO
 template<class REQ, class RESP>
 class THNetworkTask {
+
+public:
+    REQ *get_req() { return &this->req; }
+
+    RESP *get_resp() { return &this->resp; }
+
+protected:
+    REQ req;
+    RESP resp;
 };
 
 #endif //TINYHTTP_THTASK_H

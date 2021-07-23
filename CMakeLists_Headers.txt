@@ -35,5 +35,7 @@ set(INCLUDE_HEADERS
         TinyHttp/factory/THTaskFactory.h
         TinyHttp/factory/THTask.h
         TinyHttp/protocol/HttpMessage.h
+        TinyHttp/protocol/ProtocolMessage.h
+        TinyHttp/protocol/http_parser.h
         TinyHttp/manager/THGlobal.h
         )

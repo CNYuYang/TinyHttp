@@ -3,7 +3,38 @@
 
 #include <pthread.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include "msgqueue.h"
+#include "poller.h"
+
+class CommMessageOut {
+
+private:
+    // 编码
+    virtual int encode(struct iovec vectors[], int max) = 0;
+
+public:
+    virtual ~CommMessageOut() {}
+
+    friend class Communicator;
+};
+
+class CommMessageIn : private poller_message_t {
+
+protected:
+    virtual int append(const void *buf, size_t *size) = 0;
+
+protected:
+    /* 接收时发送 small packet，仅在append()函数中调用 */
+    virtual int feedback(const void *buf, size_t size);
+
+//@TODO
+public:
+    virtual ~CommMessageIn() {}
+
+    friend class Communicator;
+};
+
 
 class CommService {
 
@@ -37,6 +68,7 @@ private:
     int stop_flag;
 private:
     int create_poller(size_t poller_threads);
+
     int create_handler_threads(size_t handler_threads);
 
     static void handler_thread_routine(void *context);

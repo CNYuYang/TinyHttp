@@ -34,7 +34,8 @@ public:
     /* Start on port with IPv4. */
     int start(unsigned short port)
     {
-        return start(AF_INET, NULL, port, NULL, NULL);
+        return 0;
+      //  return start(AF_INET, NULL, port, NULL, NULL);
     }
 
     int start(int family, const char *host, unsigned short port,
@@ -44,6 +45,10 @@ public:
     int start(const struct sockaddr *bind_addr, socklen_t addrlen,
               const char *cert_file, const char *key_file);
 
+    int stop(){
+        //@TODO
+        return 0;
+    };
 public:
     size_t get_conn_count() const { return this->conn_count; }
 

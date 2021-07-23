@@ -7,4 +7,4 @@ set(LIB_DIR ${PROJECT_SOURCE_DIR}/../_lib CACHE PATH "TinyHttp lib")
 include_directories(${INC_DIR}/TinyHttp)
 link_directories(${LIB_DIR})
 
-add_executable(Tutorial main.cpp)
+add_executable(Tutorial tutorial-00-helloworld.cpp)
