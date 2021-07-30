@@ -1,11 +1,11 @@
-#include <cstring>
-#include <cstdlib>
-#include <cerrno>
-#include <stdlib.h>
 #include "Communicator.h"
-#include "poller.h"
 #include "mpoller.h"
+#include "poller.h"
 #include "thrdpool.h"
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
+#include <stdlib.h>
 
 int CommService::init(const struct sockaddr *bind_addr, socklen_t addrlen,
                       int listen_timeout, int response_timeout) {
@@ -43,6 +43,19 @@ int CommService::drain(int max) {
     return 1;
 }
 
+int Communicator::bind(CommService *service) {
+    struct poller_data data;
+    int sockfd;
+    sockfd = this->nonblock_listen(service);
+}
+
+int Communicator::nonblock_listen(CommService *service) {
+    int sockfd = service->create_listen_fd();
+    if (sockfd >= 0) {
+    }
+    return -1;
+}
+
 int Communicator::init(size_t poller_threads, size_t handler_threads) {
 
     //用于轮询的线程
@@ -58,7 +71,6 @@ int Communicator::init(size_t poller_threads, size_t handler_threads) {
             this->stop_flag = 0;
             return 0;
         }
-
     }
 
     return -1;
@@ -69,12 +81,11 @@ int Communicator::create_poller(size_t poller_threads) {
 
     //@TODO参数不齐
     struct poller_params params = {
-            .max_open_files		=	65536,
-            .create_message		=	NULL,
-            .partial_written	=	NULL,
-            .callback			=	NULL,
-            .context			=	this
-    };
+            .max_open_files = 65536,
+            .create_message = NULL,
+            .partial_written = NULL,
+            .callback = NULL,
+            .context = this};
 
     //@TODO 相信了解queue、mpoller
     // 创建消息队列
@@ -101,8 +112,7 @@ int Communicator::create_handler_threads(size_t handler_threads) {
 
     struct thrdpool_task task = {
             .routine = Communicator::handler_thread_routine,
-            .context = this
-    };
+            .context = this};
     size_t i;
 
     this->thrdpool = thrdpool_create(handler_threads, 0);
@@ -110,7 +120,7 @@ int Communicator::create_handler_threads(size_t handler_threads) {
     if (this->thrdpool) {
 
         for (i = 0; i < handler_threads; ++i) {
-            if (thrdpool_schedule(&task, this->thrdpool) < 0)break;
+            if (thrdpool_schedule(&task, this->thrdpool) < 0) break;
         }
 
         //创建成功
@@ -120,7 +130,6 @@ int Communicator::create_handler_threads(size_t handler_threads) {
         //@TODO 这句代码的含义
         msgqueue_set_nonblock(this->queue);
         thrdpool_destroy(NULL, this->thrdpool);
-
     }
 
     return -1;
@@ -139,5 +148,4 @@ void Communicator::handler_thread_routine(void *context) {
         //消息消费完，就删除
         free(res);
     }
-
 }
