@@ -12,8 +12,8 @@ public:
     }
 
 public:
-    int bind(CommService *a) {
-
+    int bind(CommService *service) {
+        return this->comm.bind(service);
     };
 
 private:
