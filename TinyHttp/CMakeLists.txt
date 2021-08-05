@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.6)
 project(TinyHttp)
 
+
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
+    find_package(OpenSSL REQUIRED)
+endif ()
 # 引入头文件
 
-include_directories(${INC_DIR}/TinyHttp)
+
+include_directories(${OPENSSL_INCLUDE_DIR} ${INC_DIR}/TinyHttp)
 
 # 添加文件夹
 
