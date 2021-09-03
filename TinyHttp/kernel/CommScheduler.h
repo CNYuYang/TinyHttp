@@ -16,6 +16,11 @@ public:
         return this->comm.bind(service);
     };
 
+    void unbind(CommService *service)
+    {
+        this->comm.unbind(service);
+    }
+
 private:
     Communicator comm;
 };
