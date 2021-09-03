@@ -1,8 +1,13 @@
 #include "THServer.h"
 #include "THGlobal.h"
+#include <cstdio>
+#include <mutex>
+#include <netdb.h>
+#include <openssl/ssl.h>
 
-int
-THServerBase::init(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file, const char *key_file) {
+#define PORT_STR_MAX 5
+
+int THServerBase::init(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file, const char *key_file) {
 
     /*超时时间选择，如果同时配置了peer_response_timeout/receive_timeout 选择其中较小的那个 */
 
@@ -39,18 +44,61 @@ int THServerBase::init_ssl_ctx(const char *cert_file, const char *key_file) {
 
 int THServerBase::start(int family, const char *host, unsigned short port,
                         const char *cert_file, const char *key_file) {
+    struct addrinfo hints = {
+            .ai_flags = AI_PASSIVE,
+            .ai_family = family,
+            .ai_socktype = SOCK_STREAM,
+    };
 
-    return 0;
+    struct addrinfo *addrinfo;
+    char port_str[PORT_STR_MAX + 1];
+    int ret;
+    snprintf(port_str, PORT_STR_MAX + 1, "%d", port);
+
+    ret = getaddrinfo(host, port_str, &hints, &addrinfo);
+
+    //获取成功
+    if (ret == 0) {
+        ret = start(addrinfo->ai_addr, (socklen_t) addrinfo->ai_addrlen,
+                    cert_file, key_file);
+        freeaddrinfo(addrinfo);
+    }
+
+    else {
+        if (ret != EAI_SYSTEM)
+            errno = EINVAL;
+        ret = -1;
+    }
+
+    return ret;
 }
 
 int THServerBase::start(const struct sockaddr *bind_addr, socklen_t addrlen, const char *cert_file,
                         const char *key_file) {
-    //SSL_CTX *ssl_ctx;
+    SSL_CTX *ssl_ctx;
     // @TODO ssl相关
     if (this->init(bind_addr, addrlen, cert_file, key_file) >= 0) {
+
+        //绑定成功
         if (this->scheduler->bind(this) >= 0)
             return 0;
+
+        //失败释放资源
+        ssl_ctx = this->get_ssl_ctx();
+        this->deinit();
+        if (ssl_ctx)
+            SSL_CTX_free(ssl_ctx);
     }
 
     return -1;
+}
+
+void THServerBase::shutdown() {
+    this->scheduler->unbind(this);
+}
+
+void THServerBase::wait_finish() {
+    SSL_CTX *ssl_ctx = this->get_ssl_ctx();
+    std::unique_lock<std::mutex> lock(this->mutex);
+
 }
