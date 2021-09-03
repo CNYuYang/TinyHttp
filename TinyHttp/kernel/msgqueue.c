@@ -42,8 +42,8 @@ struct __msgqueue
 	void **get_head;
 	void **put_head;
 	void **put_tail;
-	pthread_mutex_t get_mutex;
-	pthread_mutex_t put_mutex;
+	pthread_mutex_t get_mutex; //读锁
+	pthread_mutex_t put_mutex; //写锁
 	pthread_cond_t get_cond;
 	pthread_cond_t put_cond;
 };
