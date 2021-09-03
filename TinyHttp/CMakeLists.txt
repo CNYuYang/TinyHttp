@@ -1,14 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
 project(TinyHttp)
 
-
-if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
-    find_package(OpenSSL REQUIRED)
-endif ()
 # 引入头文件
 
-
-include_directories(${OPENSSL_INCLUDE_DIR} ${INC_DIR}/TinyHttp)
+include_directories(${INC_DIR}/TinyHttp)
 
 # 添加文件夹
 
@@ -28,3 +23,10 @@ add_library(
         $<TARGET_OBJECTS:server>
         $<TARGET_OBJECTS:manager>
 )
+
+set(LIBSO ${LIB_DIR}/libTinyHttp.so)
+add_custom_target(
+        SCRIPT_SHARED_LIB ALL
+        COMMAND ${CMAKE_COMMAND} -E echo 'GROUP ( libTinyHttp.a AS_NEEDED ( libpthread.so libssl.so libcrypto.so ) ) ' > ${LIBSO}
+)
+add_dependencies(SCRIPT_SHARED_LIB ${PROJECT_NAME})
