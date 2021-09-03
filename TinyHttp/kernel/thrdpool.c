@@ -1,21 +1,3 @@
-/*
-  Copyright (c) 2019 Sogou, Inc.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
-  Author: Xie Han (xiehan@sogou-inc.com)
-*/
-
 #include <errno.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -32,8 +14,8 @@ struct __thrdpool
 	pthread_t tid; // 线程id
 	pthread_mutex_t mutex; // 线程锁
 	pthread_cond_t cond; // 线程间通信的信号量
-	pthread_key_t key; // @TODO 了解作用
-	pthread_cond_t *terminate; // @TODO 了解作用
+	pthread_key_t key; // 线程私有存储空间
+	pthread_cond_t *terminate; // 用于销毁线程的信号量
 };
 
 struct __thrdpool_task_entry
@@ -60,6 +42,7 @@ static void *__thrdpool_routine(void *arg)
 	pthread_setspecific(pool->key, pool);
 	while (1)
 	{
+        // 等待任务队列中的任务
 		pthread_mutex_lock(&pool->mutex);
 		while (!pool->terminate && list_empty(&pool->task_queue))
 			pthread_cond_wait(&pool->cond, &pool->mutex);
@@ -172,6 +155,10 @@ static int __thrdpool_create_threads(size_t nthreads, thrdpool_t *pool)
 
 		while (pool->nthreads < nthreads)
 		{
+            //第一个参数为指向线程标识符的指针。
+            //第二个参数用来设置线程属性。
+            //第三个参数是线程运行函数的起始地址。
+            //最后一个参数是运行函数的参数。
 			ret = pthread_create(&tid, &attr, __thrdpool_routine, pool);
 			if (ret == 0)
 				pool->nthreads++;
@@ -189,6 +176,13 @@ static int __thrdpool_create_threads(size_t nthreads, thrdpool_t *pool)
 	errno = ret;
 	return -1;
 }
+
+/**
+ * 创建线程池
+ * @param nthreads 线程数量
+ * @param stacksize 栈大小
+ * @return 线程池
+ */
 
 thrdpool_t *thrdpool_create(size_t nthreads, size_t stacksize)
 {
@@ -255,6 +249,11 @@ int thrdpool_schedule(const struct thrdpool_task *task, thrdpool_t *pool)
 	return -1;
 }
 
+/**
+ * 增加线程数
+ * @param pool
+ * @return
+ */
 int thrdpool_increase(thrdpool_t *pool)
 {
 	pthread_attr_t attr;
